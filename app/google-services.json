@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "702417847026",
+    "project_id": "voicefinanceloja",
+    "storage_bucket": "voicefinanceloja.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702417847026:android:3864f2651a7dc768aac66b",
+        "android_client_info": {
+          "package_name": "com.tudominio.voicefinance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd_eOTTD736FyPpoQIp5Ac0BQ6D6t-3P4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

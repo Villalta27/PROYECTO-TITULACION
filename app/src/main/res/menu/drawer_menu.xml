@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_user"
+            android:icon="@drawable/ic_user"
+            android:title="TUS DATOS" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_history"
+            android:title="HISTORIAL GASTOS" />
+        <item
+            android:id="@+id/nav_savings"
+            android:icon="@drawable/ic_savings"
+            android:title="META DE AHORRO" />
+        <item
+            android:id="@+id/nav_config"
+            android:icon="@drawable/ic_config"
+            android:title="CONFIGURACIÓN" />
+    </group>
+
+    <item android:title="Cuenta">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@android:drawable/ic_lock_power_off"
+                android:title="CERRAR SESIÓN" />
+        </menu>
+    </item>
+</menu>
