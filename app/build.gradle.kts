@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -44,6 +43,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx") // Necesaria para guardar las fotos
 
     // --- DEPENDENCIAS ANDROID (Catálogo libs.versions.toml) ---
     implementation(libs.androidx.core.ktx)
@@ -52,10 +52,13 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    // --- LIBRERÍAS PARA EL DASHBOARD (Paso A) ---
+    // --- LIBRERÍAS PARA EL DASHBOARD ---
     // Estas permiten crear el cuadro de gastos y la lista
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    // --- LIBRERÍA PARA GESTIÓN DE IMÁGENES (GLIDE) ---
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     // --- PRUEBAS ---
     testImplementation(libs.junit)

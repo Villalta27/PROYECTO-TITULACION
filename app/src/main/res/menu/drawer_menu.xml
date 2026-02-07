@@ -3,19 +3,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_user"
-            android:icon="@drawable/ic_user"
+            android:icon="@android:drawable/ic_menu_myplaces"
             android:title="TUS DATOS" />
         <item
             android:id="@+id/nav_history"
-            android:icon="@drawable/ic_history"
+            android:icon="@android:drawable/ic_menu_recent_history"
             android:title="HISTORIAL GASTOS" />
         <item
             android:id="@+id/nav_savings"
-            android:icon="@drawable/ic_savings"
+            android:icon="@android:drawable/ic_menu_save"
             android:title="META DE AHORRO" />
         <item
             android:id="@+id/nav_config"
-            android:icon="@drawable/ic_config"
+            android:icon="@android:drawable/ic_menu_preferences"
             android:title="CONFIGURACIÓN" />
     </group>
 

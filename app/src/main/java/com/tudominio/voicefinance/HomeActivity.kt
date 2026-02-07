@@ -1,142 +1,161 @@
 package com.tudominio.voicefinance
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var drawerLayout: DrawerLayout
     private val db = Firebase.firestore
-    private lateinit var rvGastos: RecyclerView
-    private lateinit var tvGastoTotal: TextView
+    private lateinit var rvTransacciones: RecyclerView
+    private lateinit var tvSaldoCartera: TextView
+    private var carteraId: String? = null
+    private var saldoActualCalculado: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        tvGastoTotal = findViewById(R.id.tvGastoTotal)
-        rvGastos = findViewById(R.id.rvGastos)
-        rvGastos.layoutManager = LinearLayoutManager(this)
+        carteraId = intent.getStringExtra("CARTERA_ID")
+        val nombreCartera = intent.getStringExtra("CARTERA_NOMBRE")
 
-        val tvFechaActual = findViewById<TextView>(R.id.tvFechaActual)
-        val sdf = SimpleDateFormat("MMMM yyyy", Locale("es", "ES"))
-        tvFechaActual.text = sdf.format(Date()).uppercase()
+        tvSaldoCartera = findViewById(R.id.tvSaldoCartera)
+        rvTransacciones = findViewById(R.id.rvGastos)
+        rvTransacciones.layoutManager = LinearLayoutManager(this)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.setHomeAsUpIndicator(android.R.drawable.ic_menu_sort_by_size)
+        supportActionBar?.title = nombreCartera?.uppercase()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        drawerLayout = findViewById(R.id.drawer_layout)
-        val navView = findViewById<NavigationView>(R.id.nav_view)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        toolbar.setNavigationOnClickListener { drawerLayout.openDrawer(GravityCompat.START) }
-
-        navView.setNavigationItemSelectedListener { menuItem ->
-            if (menuItem.itemId == R.id.nav_logout) {
-                Firebase.auth.signOut()
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            }
-            drawerLayout.closeDrawers()
-            true
+        findViewById<Button>(R.id.btnAddIngreso).setOnClickListener {
+            mostrarDialogoTransaccion("ingreso")
         }
-
-        // Iniciar la escucha en tiempo real
-        escucharGastos()
 
         findViewById<Button>(R.id.btnAddGasto).setOnClickListener {
-            mostrarOpcionesGasto()
+            mostrarDialogoTransaccion("gasto")
         }
+
+        // Iniciamos la escucha en tiempo real apenas abre la actividad
+        escucharTransaccionesEnTiempoReal()
     }
 
-    private fun escucharGastos() {
-        val userId = Firebase.auth.currentUser?.uid ?: return
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
-        db.collection("gastos")
-            .whereEqualTo("userId", userId)
+    /**
+     * ESTA ES LA FUNCIÓN CLAVE: addSnapshotListener mantiene la conexión viva.
+     * Si agregas un dato, Firebase le avisa a la app y esta refresca la lista solita.
+     */
+    private fun escucharTransaccionesEnTiempoReal() {
+        val uId = Firebase.auth.currentUser?.uid ?: return
+        val cId = carteraId ?: return
+
+        db.collection("transacciones")
+            .whereEqualTo("userId", uId)
+            .whereEqualTo("carteraId", cId)
             .orderBy("fecha", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshots, e ->
-                if (e != null) return@addSnapshotListener
-
-                val lista = mutableListOf<Map<String, Any>>()
-                var totalSuma = 0.0
-
-                if (snapshots != null) {
-                    for (doc in snapshots) {
-                        val data = doc.data
-                        lista.add(data)
-                        totalSuma += data["monto"]?.toString()?.toDouble() ?: 0.0
-                    }
+                if (e != null) {
+                    Toast.makeText(this, "Error de red: ${e.message}", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
                 }
 
-                tvGastoTotal.text = "$ ${String.format("%.2f", totalSuma)}"
-                val adapter = GastoAdapter(lista)
-                rvGastos.adapter = adapter
-                adapter.notifyDataSetChanged() // Notificación de cambio inmediato
+                if (snapshots != null) {
+                    val lista = mutableListOf<Map<String, Any>>()
+                    var tempSaldo = 0.0
+
+                    for (doc in snapshots.documents) {
+                        val data = doc.data ?: continue
+                        val monto = data["monto"]?.toString()?.toDouble() ?: 0.0
+                        val tipo = data["tipo"]?.toString() ?: "gasto"
+
+                        if (tipo == "ingreso") {
+                            tempSaldo += monto
+                        } else {
+                            tempSaldo -= monto
+                        }
+                        lista.add(data)
+                    }
+
+                    // Actualizamos la interfaz inmediatamente
+                    saldoActualCalculado = tempSaldo
+                    tvSaldoCartera.text = "$ ${String.format("%.2f", saldoActualCalculado)}"
+
+                    // Sincronizamos el adaptador
+                    rvTransacciones.adapter = GastoAdapter(lista)
+
+                    // Sincronizamos con la colección carteras para la pantalla principal
+                    db.collection("carteras").document(cId).update("balance", saldoActualCalculado)
+                }
             }
     }
 
-    private fun mostrarOpcionesGasto() {
-        val opciones = arrayOf("🎙️ Por Voz (Próximamente)", "✍️ Entrada Manual")
-        AlertDialog.Builder(this)
-            .setTitle("Seleccione método:")
-            .setItems(opciones) { _, which ->
-                if (which == 1) mostrarFormularioManual()
-                else Toast.makeText(this, "Función de voz en desarrollo", Toast.LENGTH_SHORT).show()
-            }.show()
-    }
-
-    private fun mostrarFormularioManual() {
+    private fun mostrarDialogoTransaccion(tipo: String) {
         val builder = AlertDialog.Builder(this)
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_gasto, null)
-        builder.setView(dialogView)
+        builder.setTitle(if (tipo == "ingreso") "Nuevo Ingreso" else "Nuevo Gasto")
 
-        val etTitulo = dialogView.findViewById<EditText>(R.id.etTituloGasto)
-        val etMonto = dialogView.findViewById<EditText>(R.id.etMontoGasto)
-        val spCategoria = dialogView.findViewById<Spinner>(R.id.spCategoria)
-        val btnGuardar = dialogView.findViewById<Button>(R.id.btnGuardarGasto)
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 40, 50, 10)
+        }
 
-        val categorias = arrayOf("Alimentación", "Transporte", "Vivienda", "Salud", "Educación", "Otros")
-        spCategoria.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categorias)
+        val etTitulo = EditText(this).apply { hint = "Descripción" }
+        val etMonto = EditText(this).apply {
+            hint = "Monto $"
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+        }
 
-        val dialog = builder.create()
-        btnGuardar.setOnClickListener {
+        layout.addView(etTitulo)
+        layout.addView(etMonto)
+        builder.setView(layout)
+
+        builder.setPositiveButton("GUARDAR") { _, _ ->
             val titulo = etTitulo.text.toString().trim()
             val montoStr = etMonto.text.toString().trim()
-            val userId = Firebase.auth.currentUser?.uid
 
-            if (titulo.isNotEmpty() && montoStr.isNotEmpty() && userId != null) {
-                val gasto = hashMapOf(
-                    "titulo" to titulo,
-                    "monto" to montoStr.toDouble(),
-                    "categoria" to spCategoria.selectedItem.toString(),
-                    "fecha" to Timestamp.now(),
-                    "userId" to userId
-                )
-                db.collection("gastos").add(gasto).addOnSuccessListener {
-                    Toast.makeText(this, "Gasto guardado", Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
+            if (titulo.isNotEmpty() && montoStr.isNotEmpty()) {
+                val montoIngresado = montoStr.toDouble()
+
+                if (tipo == "gasto" && montoIngresado > saldoActualCalculado) {
+                    Toast.makeText(this, "FONDOS INSUFICIENTES", Toast.LENGTH_LONG).show()
+                } else {
+                    guardarEnFirebase(titulo, montoIngresado, tipo)
                 }
             }
         }
-        dialog.show()
+        builder.setNegativeButton("CANCELAR", null)
+        builder.show()
+    }
+
+    private fun guardarEnFirebase(titulo: String, monto: Double, tipo: String) {
+        val data = hashMapOf(
+            "titulo" to titulo,
+            "monto" to monto,
+            "tipo" to tipo,
+            "fecha" to Timestamp.now(),
+            "userId" to Firebase.auth.currentUser?.uid,
+            "carteraId" to carteraId
+        )
+
+        // Al guardar aquí, el SnapshotListener de arriba detectará el cambio y refrescará la lista
+        db.collection("transacciones").add(data)
     }
 }

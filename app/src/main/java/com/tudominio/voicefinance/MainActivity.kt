@@ -21,40 +21,44 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        // --- PERSISTENCIA DE SESIÓN ---
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
+        // Referencias usando TUS IDs ORIGINALES
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val tvGoToRegister = findViewById<TextView>(R.id.tvGoToRegister)
 
-        tvGoToRegister.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-
+        // Acción de Iniciar Sesión
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
-            val password = etPassword.text.toString().trim()
+            val pass = etPassword.text.toString().trim()
 
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                auth.signInWithEmailAndPassword(email, password)
+            if (email.isNotEmpty() && pass.isNotEmpty()) {
+                auth.signInWithEmailAndPassword(email, pass)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            val intent = Intent(this, HomeActivity::class.java)
-                            startActivity(intent)
+                            startActivity(Intent(this, FinanzasActivity::class.java))
                             finish()
                         } else {
-                            Toast.makeText(this, "Error de autenticación", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Error: ${task.exception?.message}",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
+            } else {
+                Toast.makeText(this, "Por favor, llena los campos", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // Navegación al Registro
+        tvGoToRegister.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (auth.currentUser != null) {
+            startActivity(Intent(this, FinanzasActivity::class.java))
+            finish()
         }
     }
 }
