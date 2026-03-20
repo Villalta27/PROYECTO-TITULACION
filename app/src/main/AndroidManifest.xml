@@ -45,6 +45,29 @@
             android:exported="false"
             android:label="Mis Datos" />
 
+        <activity
+            android:name=".HistorialCarterasActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".HistorialDetalleActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MetasAhorroActivity"
+            android:exported="false"
+            android:label="Metas de Ahorro" />
+
+        <activity
+            android:name=".AbonosMetaActivity"
+            android:exported="false"
+            android:label="Detalle de Ahorros" />
+
+        <activity
+            android:name=".SeleccionEstadisticasActivity"
+            android:exported="false"
+            android:label="Estadísticas" />
+
     </application>
 
 </manifest>

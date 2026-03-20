@@ -36,6 +36,7 @@ class FinanzasActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbarFinanzas)
         setSupportActionBar(toolbar)
 
+        // IMPORTANTE: Uso tus IDs originales
         drawerLayout = findViewById(R.id.drawer_layout_finanzas)
         val navView = findViewById<NavigationView>(R.id.nav_view_finanzas)
 
@@ -52,6 +53,23 @@ class FinanzasActivity : AppCompatActivity() {
                 R.id.nav_user -> {
                     startActivity(Intent(this, PerfilActivity::class.java))
                 }
+
+                R.id.nav_history -> {
+                    val intent = Intent(this, HistorialCarterasActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.nav_savings -> {
+                    val intent = Intent(this, MetasAhorroActivity::class.java)
+                    startActivity(intent)
+                }
+
+                // NUEVA CONEXIÓN: ESTADÍSTICAS
+                R.id.nav_stats -> {
+                    val intent = Intent(this, SeleccionEstadisticasActivity::class.java)
+                    startActivity(intent)
+                }
+
                 R.id.nav_logout -> {
                     Firebase.auth.signOut()
                     val intent = Intent(this, MainActivity::class.java)
@@ -84,28 +102,24 @@ class FinanzasActivity : AppCompatActivity() {
         actualizarHeaderMenu()
     }
 
-    // FUNCIÓN CRÍTICA: Sincroniza Foto y Nombre en el Header
     private fun actualizarHeaderMenu() {
         val navView = findViewById<NavigationView>(R.id.nav_view_finanzas)
         val headerView = navView.getHeaderView(0)
 
         val tvNombre = headerView.findViewById<TextView>(R.id.tvNombreUsuarioHeader)
         val tvEmail = headerView.findViewById<TextView>(R.id.tvUserEmailHeader)
-        val ivAvatar = headerView.findViewById<ImageView>(R.id.imageView) // Tu ID original
+        val ivAvatar = headerView.findViewById<ImageView>(R.id.imageView)
 
         val user = Firebase.auth.currentUser
         tvEmail.text = user?.email
 
         user?.uid?.let { uid ->
-            // Escucha cambios en tiempo real (SnapshotListener)
             db.collection("usuarios").document(uid)
                 .addSnapshotListener { snapshot, _ ->
                     if (snapshot != null && snapshot.exists()) {
-                        // Actualiza Nombre
                         val nombre = snapshot.getString("nombre")
                         tvNombre.text = nombre?.uppercase() ?: "USUARIO"
 
-                        // Actualiza Foto con Glide usando tu ic_user como respaldo
                         val fotoUrl = snapshot.getString("fotoUrl")
                         if (!fotoUrl.isNullOrEmpty()) {
                             Glide.with(this@FinanzasActivity)
@@ -154,8 +168,7 @@ class FinanzasActivity : AppCompatActivity() {
     }
 
     private fun eliminarCarteraEnCascada(idCartera: String) {
-        db.collection("transacciones")
-            .whereEqualTo("carteraId", idCartera)
+        db.collection("carteras").document(idCartera).collection("gastos")
             .get()
             .addOnSuccessListener { snapshots ->
                 val batch = db.batch()

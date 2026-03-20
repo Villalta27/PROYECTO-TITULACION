@@ -59,18 +59,21 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
-            android:weightSum="2">
+            android:weightSum="3">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddIngreso"
                 android:layout_width="0dp"
                 android:layout_height="65dp"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="4dp"
                 android:text="INGRESO"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 app:cornerRadius="16dp"
                 app:backgroundTint="#2D6A4F"
+                app:paddingStart="0dp"
+                app:paddingEnd="0dp"
                 app:icon="@android:drawable/ic_input_add" />
 
             <com.google.android.material.button.MaterialButton
@@ -78,11 +81,30 @@
                 android:layout_width="0dp"
                 android:layout_height="65dp"
                 android:layout_weight="1"
+                android:layout_marginEnd="4dp"
                 android:text="GASTO"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 app:cornerRadius="16dp"
                 app:backgroundTint="#D00000"
+                app:paddingStart="0dp"
+                app:paddingEnd="0dp"
                 app:icon="@android:drawable/ic_delete" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTransferirAhorro"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_weight="1"
+                android:text="AHORRO"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                app:cornerRadius="16dp"
+                app:backgroundTint="#4361EE"
+                app:paddingStart="0dp"
+                app:paddingEnd="0dp"
+                app:icon="@android:drawable/ic_menu_save" />
+
         </LinearLayout>
 
         <TextView

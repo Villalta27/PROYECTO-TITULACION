@@ -1,18 +1,18 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    // Aplicamos el plugin de Google Services para conectar con Firebase
-    id("com.google.gms.google-services")
+    // Usamos versiones directas para evitar el error de "libs" no encontrado
+    id("com.android.application") version "8.9.2"
+    id("org.jetbrains.kotlin.android") version "1.9.0"
+    id("com.google.gms.google-services") version "4.4.0"
 }
 
 android {
     namespace = "com.tudominio.voicefinance"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.tudominio.voicefinance"
-        minSdk = 24 // Requisito mínimo para funciones de voz estables
-        targetSdk = 36
+        minSdk = 24
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -29,31 +29,30 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
     // --- SECCIÓN DE FIREBASE ---
-    // El BoM ayuda a que todas las librerías de Firebase sean compatibles entre sí
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    // Usamos el BoM estable para asegurar compatibilidad total
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx") // Necesaria para guardar las fotos
+    implementation("com.google.firebase:firebase-storage-ktx")
 
-    // --- DEPENDENCIAS ANDROID (Catálogo libs.versions.toml) ---
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material) // Esta permite el Panel Lateral
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
+    // --- DEPENDENCIAS ANDROID (Versiones manuales para saltar el error de libs) ---
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // --- LIBRERÍAS PARA EL DASHBOARD ---
-    // Estas permiten crear el cuadro de gastos y la lista
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
@@ -61,7 +60,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
     // --- PRUEBAS ---
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }

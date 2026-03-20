@@ -13,6 +13,12 @@
             android:id="@+id/nav_savings"
             android:icon="@android:drawable/ic_menu_save"
             android:title="META DE AHORRO" />
+
+        <item
+            android:id="@+id/nav_stats"
+            android:icon="@drawable/ic_menu_estadisticas"
+            android:title="ESTADÍSTICAS" />
+
         <item
             android:id="@+id/nav_config"
             android:icon="@android:drawable/ic_menu_preferences"
