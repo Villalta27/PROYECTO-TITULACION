@@ -57,9 +57,81 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ACCIONES RÁPIDAS"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTransferirDinero"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_marginEnd="15dp"
+                    app:backgroundTint="#1B263B"
+                    app:strokeColor="#4CC9F0"
+                    app:strokeWidth="2dp"
+                    app:cornerRadius="28dp"
+                    app:icon="@android:drawable/ic_menu_send"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconSize="25dp"
+                    app:iconTint="#4CC9F0"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:contentDescription="Transferir entre carteras" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnHablarMic"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    app:backgroundTint="#E0E1DD"
+                    app:cornerRadius="35dp"
+                    app:icon="@android:drawable/ic_btn_speak_now"
+                    app:iconSize="35dp"
+                    app:iconTint="#000000"
+                    app:elevation="6dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:contentDescription="Botón de dictado por voz" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AGREGAR MANUALMENTE"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
-            android:weightSum="3">
+            android:weightSum="3"
+            android:layout_marginBottom="8dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddIngreso"
@@ -72,8 +144,6 @@
                 android:textStyle="bold"
                 app:cornerRadius="16dp"
                 app:backgroundTint="#2D6A4F"
-                app:paddingStart="0dp"
-                app:paddingEnd="0dp"
                 app:icon="@android:drawable/ic_input_add" />
 
             <com.google.android.material.button.MaterialButton
@@ -87,8 +157,6 @@
                 android:textStyle="bold"
                 app:cornerRadius="16dp"
                 app:backgroundTint="#D00000"
-                app:paddingStart="0dp"
-                app:paddingEnd="0dp"
                 app:icon="@android:drawable/ic_delete" />
 
             <com.google.android.material.button.MaterialButton
@@ -101,20 +169,37 @@
                 android:textStyle="bold"
                 app:cornerRadius="16dp"
                 app:backgroundTint="#4361EE"
-                app:paddingStart="0dp"
-                app:paddingEnd="0dp"
                 app:icon="@android:drawable/ic_menu_save" />
-
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="HISTORIAL RECIENTE"
-            android:textColor="#FFFFFF"
-            android:padding="16dp"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="HISTORIAL RECIENTE"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnFiltroTiempo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_today"
+                android:scaleType="centerInside"
+                app:tint="#A9D6E5"
+                android:contentDescription="Filtrar por fecha y orden" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvGastos"

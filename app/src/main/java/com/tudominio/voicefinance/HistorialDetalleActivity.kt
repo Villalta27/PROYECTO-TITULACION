@@ -68,9 +68,13 @@ class HistorialDetalleActivity : AppCompatActivity() {
 
                     tvTotal.text = String.format(Locale.US, "$ %.2f", sumaGastosOnly)
 
-                    // MODIFICACIÓN AQUÍ: Pasamos la lista y una función vacía para el clic de edición
-                    rv.adapter = GastoAdapter(listaMaps) { _, _ ->
-                        // En el historial no permitimos edición por ahora para evitar conflictos
+                    // --- CAMBIO CLAVE AQUÍ ---
+                    // Le pasamos 3 parámetros al GastoAdapter:
+                    // 1. La lista de mapas.
+                    // 2. TRUE para activar el Modo Lectura (que ocultará los 3 puntos).
+                    // 3. Una función vacía para las opciones (ya que no se verán).
+                    rv.adapter = GastoAdapter(listaMaps, true) { _, _ ->
+                        // Bloque vacío: No hay edición en historial
                     }
                 }
             }

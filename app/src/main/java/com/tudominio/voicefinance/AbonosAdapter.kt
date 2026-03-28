@@ -13,29 +13,41 @@ class AbonosAdapter(private val lista: List<Map<String, Any>>) :
     RecyclerView.Adapter<AbonosAdapter.ViewHolder>() {
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        // Usamos los IDs del layout simple_list_item_2
         val tvMonto: TextView = v.findViewById(android.R.id.text1)
         val tvDetalle: TextView = v.findViewById(android.R.id.text2)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // Usamos un diseño simple de Android para ahorrar tiempo, luego puedes personalizarlo
         val v = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_2, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val abono = lista[position]
-        val monto = abono["monto"].toString()
-        val cartera = abono["desdeCartera"].toString()
+
+        // Convertimos el monto a Double para poder comparar si es menor a cero
+        val montoValue = (abono["monto"] as? Number)?.toDouble() ?: 0.0
+        val cartera = abono["desdeCartera"]?.toString() ?: "Desconocido"
         val timestamp = abono["fecha"] as? Timestamp
 
         val fechaStr = timestamp?.toDate()?.let {
             SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(it)
         } ?: ""
 
-        holder.tvMonto.text = "+ $ $monto"
-        holder.tvMonto.setTextColor(android.graphics.Color.parseColor("#00FF88"))
-        holder.tvDetalle.text = "Desde: $cartera • $fechaStr"
+        // --- LÓGICA DE COLOR Y TEXTO COHERENTE ---
+        if (montoValue < 0) {
+            // Es un REVERSO: Rojo y signo negativo
+            // Usamos Math.abs para que no salga "- $-50", sino "- $ 50"
+            holder.tvMonto.text = "- $ ${Math.abs(montoValue)}"
+            holder.tvMonto.setTextColor(android.graphics.Color.parseColor("#E63946"))
+        } else {
+            // Es un ABONO: Verde y signo positivo
+            holder.tvMonto.text = "+ $ $montoValue"
+            holder.tvMonto.setTextColor(android.graphics.Color.parseColor("#00FF88"))
+        }
+
+        holder.tvDetalle.text = "$cartera • $fechaStr"
         holder.tvDetalle.setTextColor(android.graphics.Color.LTGRAY)
     }
 

@@ -58,6 +58,7 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_menu"
         app:itemIconTint="#FFFFFF"
-        app:itemTextColor="#FFFFFF" />
+        app:itemTextColor="#FFFFFF"
+        app:itemBackground="@drawable/drawer_selected_background" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

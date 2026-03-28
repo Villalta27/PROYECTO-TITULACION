@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D1B2A"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarDetalleCartera"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1B263B"
+        app:titleTextColor="#FFFFFF" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="FILTRAR PERIODO"
+            android:textColor="#88FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1" />
+
+        <ImageButton
+            android:id="@+id/btnFiltroCarteraDetalle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_boton_redondo"
+            android:src="@android:drawable/ic_menu_today"
+            android:contentDescription="Filtrar"
+            app:tint="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/btnLimpiarFiltroCartera"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_boton_redondo"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="Limpiar"
+            app:tint="#FF4C4C" />
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="#1B263B"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BALANCE DE ESTA CARTERA"
+                android:textColor="#88FFFFFF"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"/>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChartCartera"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tvPieNota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Los datos mostrados corresponden al historial total de esta cartera."
+        android:textColor="#55FFFFFF"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"
+        android:paddingHorizontal="40dp" />
+
+</LinearLayout>

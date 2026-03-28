@@ -13,10 +13,39 @@
         android:background="#1B263B"
         app:titleTextColor="#FFFFFF" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnReversarAhorro"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_margin="16dp"
+        android:text="REVERSAR DINERO A CARTERA"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:backgroundTint="#E63946"
+        app:cornerRadius="12dp"
+        app:icon="@android:drawable/ic_menu_revert"
+        app:iconGravity="textStart"
+        app:rippleColor="#55FFFFFF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Historial de movimientos"
+        android:textColor="#88FFFFFF"
+        android:textSize="12sp"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="8dp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:letterSpacing="0.05" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAbonos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:contentDescription="Lista detallada de abonos y reversos realizados" />
 
 </LinearLayout>

@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class FinanzaAdapter(
     private var lista: List<Map<String, Any>>,
-    private val onItemClick: (String, String) -> Unit, // Para abrir el Historial o el Home
-    private val onOpcionesClick: (String, String, View) -> Unit // Para el menú de tres puntos
+    private val esModoLectura: Boolean = false, // <--- PASO 1: Agregamos este switch (falso por defecto)
+    private val onItemClick: (String, String) -> Unit,
+    private val onOpcionesClick: (String, String, View) -> Unit
 ) : RecyclerView.Adapter<FinanzaAdapter.ViewHolder>() {
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -28,7 +29,6 @@ class FinanzaAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
 
-        // Extraemos los datos del Map de forma segura
         val id = item["id"]?.toString() ?: ""
         val nombre = item["nombre"]?.toString() ?: "Sin nombre"
         val balance = item["balance"]?.toString() ?: "0.00"
@@ -38,24 +38,29 @@ class FinanzaAdapter(
         holder.balance.text = "Balance: $ $balance"
         holder.fechas.text = "Creado: $creado"
 
-        // EVENTO 1: Al tocar cualquier parte de la tarjeta, ejecutamos onItemClick
-        holder.itemView.setOnClickListener {
-            if (id.isNotEmpty()) {
-                onItemClick(id, nombre)
+        // --- PASO 2: LÓGICA DE VISIBILIDAD ---
+        if (esModoLectura) {
+            // Si es historial, escondemos el botón de opciones por completo
+            holder.btnOpciones.visibility = View.GONE
+        } else {
+            // Si es la Home, lo mostramos y activamos su clic
+            holder.btnOpciones.visibility = View.VISIBLE
+            holder.btnOpciones.setOnClickListener {
+                if (id.isNotEmpty()) {
+                    onOpcionesClick(id, nombre, it)
+                }
             }
         }
 
-        // EVENTO 2: Al tocar el botón de opciones (tres puntos)
-        holder.btnOpciones.setOnClickListener {
+        holder.itemView.setOnClickListener {
             if (id.isNotEmpty()) {
-                onOpcionesClick(id, nombre, it)
+                onItemClick(id, nombre)
             }
         }
     }
 
     override fun getItemCount() = lista.size
 
-    // Función para refrescar la lista desde Firebase
     fun actualizarLista(nuevaLista: List<Map<String, Any>>) {
         this.lista = nuevaLista
         notifyDataSetChanged()

@@ -1,5 +1,6 @@
 package com.tudominio.voicefinance
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -19,12 +20,22 @@ class SeleccionEstadisticasActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        // BOTÓN 1: ESTADÍSTICAS GENERALES (Torta Global)
         findViewById<MaterialCardView>(R.id.cardEstadisticasGenerales).setOnClickListener {
-            // Próximo paso: Abrir Estadísticas Generales
+            val intent = Intent(this, EstadisticasActivity::class.java)
+            startActivity(intent)
         }
 
+        // BOTÓN 2: ESTADÍSTICAS POR CARTERA (Listado de carteras)
         findViewById<MaterialCardView>(R.id.cardEstadisticasPorCartera).setOnClickListener {
-            // Próximo paso: Abrir Estadísticas Por Cartera
+            val intent = Intent(this, EstadisticasCarterasActivity::class.java)
+            startActivity(intent)
+        }
+
+        // BOTÓN 3: ESTADÍSTICAS POR CATEGORÍA (¡CONECTADO AHORA!)
+        findViewById<MaterialCardView>(R.id.cardEstadisticasPorCategoria).setOnClickListener {
+            val intent = Intent(this, EstadisticasCategoriasActivity::class.java)
+            startActivity(intent)
         }
     }
 }

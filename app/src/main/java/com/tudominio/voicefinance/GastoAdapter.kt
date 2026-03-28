@@ -14,6 +14,7 @@ import java.util.*
 
 class GastoAdapter(
     private val lista: List<Map<String, Any>>,
+    private val esModoLectura: Boolean = false, // <--- PASO 1: Agregamos el interruptor
     private val onEditClick: (Map<String, Any>, String) -> Unit
 ) : RecyclerView.Adapter<GastoAdapter.ViewHolder>() {
 
@@ -71,29 +72,33 @@ class GastoAdapter(
             holder.borde.setBackgroundColor(Color.parseColor(colorHex))
         }
 
-        // --- LÓGICA DE MENÚ CON RESTRICCIÓN DE SEGURIDAD ---
-        holder.btnMenu.setOnClickListener { view ->
-            val popup = PopupMenu(view.context, view)
-            val esAhorro = tituloStr.contains("Ahorro:", ignoreCase = true)
+        // --- PASO 2: LÓGICA DE VISIBILIDAD DE MENÚ ---
+        if (esModoLectura) {
+            // Si estamos en el historial, el botón de menú desaparece por completo
+            holder.btnMenu.visibility = View.GONE
+        } else {
+            // Si estamos en la Home, el botón es visible y tiene su lógica normal
+            holder.btnMenu.visibility = View.VISIBLE
+            holder.btnMenu.setOnClickListener { view ->
+                val popup = PopupMenu(view.context, view)
+                val esAhorro = tituloStr.contains("Ahorro:", ignoreCase = true)
 
-            // 1. Modificar Nombre: Disponible para TODOS
-            popup.menu.add("Modificar Nombre")
+                popup.menu.add("Modificar Nombre")
 
-            // 2. Modificar Categoría: SOLO para GASTOS (no ahorros, no ingresos)
-            if (tipo == "gasto" && !esAhorro) {
-                popup.menu.add("Modificar Categoría")
+                if (tipo == "gasto" && !esAhorro) {
+                    popup.menu.add("Modificar Categoría")
+                }
+
+                if (tipo == "gasto" || esAhorro) {
+                    popup.menu.add("Eliminar")
+                }
+
+                popup.setOnMenuItemClickListener { menuItem ->
+                    onEditClick(item, menuItem.title.toString())
+                    true
+                }
+                popup.show()
             }
-
-            // 3. Eliminar: SOLO para GASTOS y AHORROS (bloqueado para ingresos)
-            if (tipo == "gasto" || esAhorro) {
-                popup.menu.add("Eliminar")
-            }
-
-            popup.setOnMenuItemClickListener { menuItem ->
-                onEditClick(item, menuItem.title.toString())
-                true
-            }
-            popup.show()
         }
     }
 

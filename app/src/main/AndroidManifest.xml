@@ -4,9 +4,16 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -28,46 +35,56 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
+        <activity android:name=".RegisterActivity" android:exported="false" />
+        <activity android:name=".FinanzasActivity" android:exported="false" />
+        <activity android:name=".HomeActivity" android:exported="false" />
+        <activity android:name=".PerfilActivity" android:exported="false" android:label="Mis Datos" />
+        <activity android:name=".HistorialCarterasActivity" android:exported="false" />
+        <activity android:name=".HistorialDetalleActivity" android:exported="false" />
+        <activity android:name=".MetasAhorroActivity" android:exported="false" android:label="Metas de Ahorro" />
+        <activity android:name=".AbonosMetaActivity" android:exported="false" android:label="Detalle de Ahorros" />
+        <activity android:name=".SeleccionEstadisticasActivity" android:exported="false" android:label="Estadísticas" />
 
         <activity
-            android:name=".FinanzasActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".PerfilActivity"
+            android:name=".EstadisticasActivity"
             android:exported="false"
-            android:label="Mis Datos" />
+            android:label="Tu Desempeño"
+            android:screenOrientation="portrait" />
 
         <activity
-            android:name=".HistorialCarterasActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".HistorialDetalleActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".MetasAhorroActivity"
+            android:name=".EstadisticasCarterasActivity"
             android:exported="false"
-            android:label="Metas de Ahorro" />
+            android:label="Estadísticas por Cartera" />
 
         <activity
-            android:name=".AbonosMetaActivity"
+            android:name=".DetalleEstadisticaCarteraActivity"
             android:exported="false"
-            android:label="Detalle de Ahorros" />
+            android:label="Detalle de Cartera"
+            android:screenOrientation="portrait" />
 
         <activity
-            android:name=".SeleccionEstadisticasActivity"
+            android:name=".EstadisticasCategoriasActivity"
             android:exported="false"
-            android:label="Estadísticas" />
+            android:label="Ranking de Categorías"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".DetalleCategoriasPorCarteraActivity"
+            android:exported="false"
+            android:label="Categorías por Cartera"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ConfiguracionActivity"
+            android:exported="false"
+            android:label="Configuración"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".GestionCategoriasActivity"
+            android:exported="false"
+            android:label="Gestionar Categorías"
+            android:screenOrientation="portrait" />
 
     </application>
-
 </manifest>

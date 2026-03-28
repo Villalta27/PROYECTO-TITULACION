@@ -2,7 +2,6 @@ package com.tudominio.voicefinance
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,24 +36,24 @@ class HistorialCarterasActivity : AppCompatActivity() {
             .whereEqualTo("userId", userId)
             .addSnapshotListener { snapshot, _ ->
                 if (snapshot != null) {
-                    // Convertimos el snapshot a una lista de Mapas como pide tu adaptador
                     val listaMaps = snapshot.documents.map { doc ->
                         val data = doc.data?.toMutableMap() ?: mutableMapOf()
                         data["id"] = doc.id
                         data
                     }
 
-                    // Le pasamos los 3 parámetros: lista, onItemClick y onOpcionesClick
+                    // --- CAMBIO AQUÍ: Pasamos los 4 parámetros ahora ---
                     val adapter = FinanzaAdapter(
                         listaMaps,
-                        { id, nombre -> // Acción al tocar la cartera
+                        true, // <--- PASO 3: Activamos el Modo Lectura (oculta la flecha)
+                        { id, nombre ->
                             val intent = Intent(this, HistorialDetalleActivity::class.java)
                             intent.putExtra("carteraId", id)
                             intent.putExtra("carteraNombre", nombre)
                             startActivity(intent)
                         },
-                        { id, nombre, vista ->
-                            // Aquí no necesitamos opciones en el historial, lo dejamos vacío
+                        { _, _, _ ->
+                            // Este bloque ya no se ejecutará porque el botón estará GONE
                         }
                     )
                     rv.adapter = adapter
